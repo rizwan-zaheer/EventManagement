@@ -1,127 +1,100 @@
 require_relative 'event'
-require_relative 'validation'
-require_relative 'delete_events'
-
+require_relative 'helper'
+require_relative 'input'
+$total_events = {}
+# Calendar class
 class Calendar
+  extend Input
+  # add event
+  def self.add
+    user_input = input_for_add
+    return false unless user_input
 
-  # Add Event
-  def self.add(total_events)
-    p "Event Date:"
-    date=gets.chomp 
-    if !Validation.validate_date(date)
-      return false
+    date, title, desc = user_input
+    flag = false
+    $total_events.each do |key, value|
+      next unless key == (date)
+
+      new_event = Event.new(title, desc)
+      value.push new_event
+      flag = true
     end
-    p "Event Title:"
-    title=gets.chomp
-    if Validation.check_string(title)
-      return false
+    unless flag
+      new_event = Event.new(title, desc)
+      $total_events[date] = [new_event]
     end
-    p "Event Desc:"
-    desc=gets.chomp
-    if Validation.check_string(desc)
-      return false
-    end
-    flag=false
-    total_events.each_with_index do |event,index|
-      if event.has_key?(date) 
-        newevent=Event.new(title,desc)
-        event[date][index+1]=newevent
-        flag=true
-      end
-    end
-    if(!flag)
-      event=Event.new(title,desc)
-      arr_of_events=[]
-      arr_of_events.push event
-      hash={date=>arr_of_events}
-      total_events<<hash
-    end
+    p 'Event add successfully'
     true
   end
-  #Modify Event
-  def self.modify(total_events)
-    p "Enter date on which you modify event:"
-    date=gets.chomp
-    if !Validation.validate_date(date)
-      return false
-    end
+  # modify event
+  def self.modify
 
-    p "Enter Event Title:"
-    title=gets.chomp
-    if Validation.check_string(title)
-      return false
-    end
+    user_input = input_for_modify
+    return false unless user_input
 
-    total_events.each_with_index do |event,index|
-      if event.has_key?(date) &&  event[date][index].title==title
-      puts "Enter NewTitle:"
-      newtitle=gets.chomp
-      if Validation.check_string(newtitle)
-        return false
+    date, title, new_title, new_desc = user_input
+    $total_events.each do |key, value|
+      next unless key == date
+
+      value.each do |event|
+        next unless event.title == title
+
+        event.title = new_title
+        event.desc = new_desc
+        p 'Event Modify Successfully'
+        return true
       end
-      puts "Enter NewDesc:"
-      newdesc=gets.chomp
-      if Validation.check_string(newdesc)
-        return false
+    end
+    false
+  end
+  # single event on date
+  def self.single_event(date, title)
+
+    $total_events.each do |key, value|
+      next unless key == date
+
+      value.each do |event|
+        next unless event.title == title
+
+        value.pop
+        p 'Event deleted successfully'
+        return true
       end
-      event[date][index].title=newtitle
-      event[date][index].desc=newdesc
+    end
+    p 'No event match to your title or date'
+    false
+  end
+  # all events on date
+  def self.all_events_on_Date(date)
+
+    $total_events.each do |key, _value|
+      next unless key == date
+
+      $total_events.tap { |events| events.delete(key) }
+      p 'Events deleted successfully'
       return true
-      else
-        return '0'
-      end
     end
   end
+  # all events on month
+  def self.all_events_on_month(month)
 
-  #Delete Event
+    flag = false
+    $total_events.each do |key, _value|
+      _key_day, key_month, _key_year = key.split('-')
+      next unless key_month == month
 
-  def self.delete(total_events)
-    puts "Enter date on which you want to delete event:"
-    date=gets.chomp
-    if !Validation.validate_date(date)
-      return false
+      $total_events.tap { |events| events.delete(key) }
+      p 'Events deleted successfully'
+      flag = true
     end
-    puts "1:Single Event on a Date"
-    puts "2:All Events on a Date"
-    puts "3:All Events in a month"
-    loop do
-      choice =gets.chomp
-      if choice=="1"
-        if Delete::single_event(total_events,date)
-          p 'Event Deleted Successfully'
-          break
-        else Delete::single_event(total_events,date)
-          p 'Invalid title name or no event exist at this date'
-        end
+    flag ? true : false
+  end
+  # calendar view
 
-      elsif choice=="2"
-        if Delete::all_events_on_Date(total_events,date)
-          p "Events Deleted Successfully"
-          break
-        else
-          p 'No Event exist at this date'
-        end
-      elsif choice=="3"
-        if Delete::all_events_on_month(total_events,date)
-          p "Events deleted successfully"
-          break
-        else
-          p 'No Event exist at this date'
-        end
-      else
-        p "Please enter right option"
-        break
-      end
+  def self.view
+
+    $total_events.each do |key, value|
+      p "#{key}  =>  #{value.size} event"
     end
   end
-  # Calendar View
-#   def self.view(total_events)
-#     total_events.each_with_index do |event,index|
-#       count=0
-#       event[date].each_with_index do |obj,i|
-#         count=i
-#       end
-#       puts event[date]
-#     end
-#   end
-# end
+end
