@@ -25,36 +25,23 @@ module Input
     date = gets.chomp
     return false unless validate_date(date)
 
-    flag = false
-    $total_events.each_pair do |key, _value|
-      next unless key == date
+    p 'Enter title name to change:'
+    title = gets.chomp
+    return false if check_string(title)
 
-      flag = true
-    end
-    if flag
-      p 'Enter title name to change:'
-      title = gets.chomp
-      return false if check_string(title)
+    p 'Enter NewTitle:'
+    new_title = gets.chomp
+    return false if check_string(new_title)
 
-      p 'Enter NewTitle:'
-      new_title = gets.chomp
-      return false if check_string(new_title)
+    p 'Enter NewDesc'
+    new_desc = gets.chomp
+    return false if check_string(new_desc)
 
-      p 'Enter NewDesc'
-      new_desc = gets.chomp
-      return false if check_string(new_desc)
-
-      return [date, title, new_title, new_desc]
-    end
-    false
+    [date, title, new_title, new_desc]
   end
   # input for delete
-  def delete_events
-
-    p '1:Single event on a date'
-    p '2:All events on a date'
-    p '3:All events on a month'
-    choice = gets.chomp
+  def delete_events(choice)
+    
     case choice
     when '1'
       p 'Enter date:'
@@ -64,16 +51,19 @@ module Input
       p 'Enter title:'
       title = gets.chomp
       return false if check_string(title)
-      return true if Calendar.single_event(date, title)
+
+      [date, title]
     when '2'
       p 'Enter date:'
       date = gets.chomp
       return false unless validate_date(date)
-      return true if Calendar.all_events_on_Date(date)
+
+      date
     when '3'
       p 'Enter month:'
       month = gets.chomp
-      return true if Calendar.all_events_on_month(month)
+
+      month
     else
       p 'Select right option'
     end
