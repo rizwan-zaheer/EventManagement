@@ -1,0 +1,21 @@
+{{
+    // If not specified searches for 'rubocop' executable available on PATH (default and recommended)
+    //"ruby.rubocop.executePath": "",
+    // You can use specific path
+    //"ruby.rubocop.executePath": "/Users/rizwan/.rbenv/shims/",
+    "ruby.rubocop.executePath": "~/.rbenv/shims/",
+    // "ruby.rubocop.executePath": "D:/bin/Ruby22-x64/bin/"
+    // If not specified, it assumes a null value by default.
+    "ruby.rubocop.configFilePath": "/home/rizwan/Desktop/EventManagement/.vscode/.rubocop.yml",
+    // default true
+    "ruby.rubocop.onSave": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveTimeout": 5000,
+    "ruby.format": "rubocop",
+    "ruby.rubocop.useBundler": true,
+    "ruby.lint": {
+        "rubocop": {
+          "forceExclusion": true,
+        }
+      }
+  }

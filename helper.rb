@@ -11,7 +11,6 @@ def validate_date(date)
 end
   # validate string
   def check_string (string)
-
     string.scan(/\D/).empty?
   end
 end

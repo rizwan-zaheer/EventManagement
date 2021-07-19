@@ -13,7 +13,7 @@ class Calendar
 
     user_input = input_for_add
     return false unless user_input
-
+    
     date, title, desc = user_input
     flag = false
     @total_events.each do |key, value|
