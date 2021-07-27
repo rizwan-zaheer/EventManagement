@@ -1,43 +1,56 @@
 require_relative 'calendar'
 require_relative 'helper'
+require_relative 'input'
 # Module
 module Main
+  extend Input
   calendar = Calendar.new({})
   loop do
     p '1:Add Event'
     p '2:Modify Event'
-    p '3:Delete Event'
-    p '4:Calendar View'
-    p '5:Exit'
+    p '3:Delete Single Event'
+    p '4:Delete All Events on date'
+    p '5:Delete All Events on Mont'
+    p '6::Calendar View'
+    p '7::Exit'
     choice = gets.chomp
     case choice
     when '1'
-      p 'Please check your date or title/desc' unless calendar.add
-    when '2'
-      p 'Please check your date or title' unless calendar.modify
-    when '3'
-      p '1:Single event on a date'
-      p '2:All events on a date'
-      p '3:All events on a month'
-      choice2 = gets.chomp
-      case choice2
-      when '1'
-        p 'Check date and title or no event exist at this date' unless calendar.single_event(choice2)
-      when '2'
-        p 'Check date or no event exist at this date' unless calendar.all_events_on_Date(choice2)
-      when '3'
-        p 'Check date or no event exist at this date' unless calendar.all_events_on_month(choice2)
+      user_input = input_for_add
+      if user_input
+        p 'Event Add Successfully' if calendar.add(user_input)
       else
-        p 'select right option'
+        p 'Please check your date or title/desc'
+      end
+    when '2'
+      user_input = input_for_modify
+      if user_input
+        p 'Event Modify Successfully' if calendar.modify(user_input)
+      else
+        p 'Please check your date or title/desc'
+      end
+    when '3'
+      user_input = input_for_single_event
+      if user_input
+        p 'Event deleted Successfully' if calendar.single_event(user_input)
+      else
+        p 'Please check your date or title/desc'
       end
     when '4'
-      calendar.view
+      user_input = input_for_all_event_on_date
+      if user_input
+        p 'Event deleted Successfully' if calendar.all_events_on_Date(user_input)
+      else
+        p 'Please check your date or title/desc'
+      end
     when '5'
-      break
+      p 'Enter month:'
+      month = gets.chomp
+      p 'Event deleted Successfully' if calendar.all_events_on_month(month)
+    when '6'
+      calendar.view
     else
       p 'Please select right option'
     end
   end
 end
-
-

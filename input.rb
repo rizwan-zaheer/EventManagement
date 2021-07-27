@@ -19,6 +19,7 @@ module Input
     [date, title, desc]
   end
   # input for modify event
+
   def input_for_modify
 
     p 'Enter date on which you modify event'
@@ -39,33 +40,28 @@ module Input
 
     [date, title, new_title, new_desc]
   end
-  # input for delete
-  def delete_events(choice)
-    
-    case choice
-    when '1'
-      p 'Enter date:'
-      date = gets.chomp
-      return false unless validate_date(date)
+  # input for single event delete
 
-      p 'Enter title:'
-      title = gets.chomp
-      return false if check_string(title)
+  def input_for_single_event
 
-      [date, title]
-    when '2'
-      p 'Enter date:'
-      date = gets.chomp
-      return false unless validate_date(date)
+    p 'Enter date:'
+    date = gets.chomp
+    return false unless validate_date(date)
 
-      date
-    when '3'
-      p 'Enter month:'
-      month = gets.chomp
+    p 'Enter title:'
+    title = gets.chomp
+    return false if check_string(title)
 
-      month
-    else
-      p 'Select right option'
-    end
+    [date, title]
+  end
+  # input for all event on date delete
+
+  def input_for_all_event_on_date
+
+    p 'Enter date:'
+    date = gets.chomp
+    return false unless validate_date(date)
+
+    date
   end
 end
